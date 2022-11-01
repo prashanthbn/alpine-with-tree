@@ -1,0 +1,31 @@
+resources:
+- name: alpine-tree-src
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/prashanthbn/alpine-with-tree.git
+    branch: main
+    ignore_paths:
+      - .git/**
+      - .git/*
+      - .git/
+      - .git
+      - .gitignore
+# Where we will push the image
+- name: alpine-tree-img
+  type: docker-image
+  icon: docker
+  source:
+    username: ((docker-hub-username))
+    password: ((docker-hub-password))
+    repository: ((docker-hub-username))/alpine-tree
+
+jobs:
+- name: publish
+  public: true
+  serial: true
+  plan:
+  - get: alpine-tree-src
+  - put: alpine-tree-img
+    params:
+      build: alpine-tree-src
